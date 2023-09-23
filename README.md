@@ -11,4 +11,4 @@ Welcome to my Pizza Delivery API repository! This API allows you to manage order
 - **Payment Integration:** Support for various payment methods.
 - **Customization:** Tailor the API to your restaurant's specific needs.
 
-***I worked on this project during my summer internship when I was learning about APIs before I dived into a team project using FASTAPI***
+***I worked on this project during my summer internship when I was still learning about APIs before I dived into a team project using FASTAPI***
