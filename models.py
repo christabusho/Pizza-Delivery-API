@@ -1,0 +1,75 @@
+from enum import Enum
+from database import Base
+from sqlalchemy import Column,Integer,Boolean,Text,String,ForeignKey
+from sqlalchemy.orm import relationship
+from sqlalchemy_utils.types import ChoiceType
+
+class OrderStatus(str,Enum):
+    pending="PENDING"
+    in_transit="IN-TRANSIT"
+    delivered="DELIVERED"
+
+class OrderSize(str,Enum):
+    small="SMALL"
+    medium="MEDIUM"
+    large="LARGE"
+    ExtraLarge="EXTRA LARGE"
+
+class Toppings(str,Enum):
+    pepperoni="PEPPERONI"
+    pineapple="PINEAPPLE"
+
+
+
+class User(Base):
+    __tablename__='user'
+    id=Column(Integer,primary_key=True)
+    username=Column(String(25),unique=True)
+    email=Column(String(80),unique=True)
+    password=Column(Text,nullable=True)
+    is_staff=Column(Boolean,default=False)
+    is_active=Column(Boolean,default=False)
+    orders=relationship('Order',back_populates='user')
+    
+    
+    def __repr(self):
+        return f"<User {self.username}"
+
+
+
+class Order(Base):
+
+    ORDER_STATUS=(
+        ('PENDING','pending'),
+        ('IN-TRANSIT', 'in-transit'),
+        ('DELIVERED','delivered')
+    )
+
+    
+    PIZZA_SIZES=(
+        ('SMALL', 'small'),
+        ('MEDIUM', 'medium'),
+        ('LARGE', 'large'),
+        ('EXTRA LARGE', 'extra large')
+    )
+
+    Toppings=(
+        ('PEPPERONI',"pepperoni"),
+        ('PINEAPPLE','pineapple')
+    )
+
+
+
+    __tablename__='orders'
+    id=Column(Integer,primary_key=True)
+    quantity=Column(Integer,nullable=False)
+    order_status=Column(ChoiceType(choices=ORDER_STATUS),default='PENDING')
+    pizza_size=Column(ChoiceType(choices=PIZZA_SIZES),default="SMALL")
+    toppings=Column(ChoiceType(choices=Toppings),default="PEPPERONI")
+    user_id=Column(Integer,ForeignKey('user.id'))
+    user=relationship('User',back_populates='orders')
+
+
+
+    def _repr__(self):
+        return f"<Order {self.id}>"
